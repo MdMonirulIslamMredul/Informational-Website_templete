@@ -1,7 +1,9 @@
 @php
-    $navSetting = \App\Models\Setting::first();
+    $navSetting = $settings ?? null;
+    $isHome = request()->routeIs('home');
 @endphp
-<nav class="navbar navbar-expand-lg sticky-top border-bottom">
+<nav class="navbar navbar-expand-lg {{ $isHome ? 'navbar-home navbar-home-overlay fixed-top' : 'sticky-top' }} border-bottom"
+    data-navbar-home="{{ $isHome ? 'true' : 'false' }}">
     <div class="container">
         <a class="navbar-brand fw-bold" href="{{ route('home') }}">
             @if ($navSetting?->logo_path)
@@ -28,6 +30,12 @@
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('contact.index') }}">Contact</a></li>
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary text-white px-4 rounded ms-lg-3"
+                            href="{{ route('register') }}">Register</a>
+                    </li>
+                @endguest
             </ul>
         </div>
     </div>

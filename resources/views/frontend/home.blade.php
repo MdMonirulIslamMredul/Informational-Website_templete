@@ -5,10 +5,16 @@
 @push('styles')
     <style>
         .hero-slider .carousel-item {
-            min-height: 72vh;
+            min-height: 82vh;
             background-size: cover;
             background-position: center;
             position: relative;
+        }
+
+        @media (min-width: 992px) {
+            .hero-slider .carousel-item {
+                min-height: 100vh;
+            }
         }
 
         .hero-slider .carousel-item::before {
@@ -22,6 +28,33 @@
             position: relative;
             z-index: 2;
             color: #fff;
+        }
+
+        .hero-slider .hero-slide-inner {
+            padding-top: 6rem !important;
+            padding-bottom: 4rem;
+        }
+
+        @media (min-width: 992px) {
+            .hero-slider .hero-slide-inner {
+                padding-top: clamp(6rem, 14vh, 11rem) !important;
+            }
+
+            .hero-slider .hero-content {
+                margin-top: 0;
+            }
+        }
+
+        .hero-slider .btn-outline-light {
+            --bs-btn-color: #ffffffb6;
+            --bs-btn-border-color: rgba(255, 255, 255, 0.85);
+            --bs-btn-hover-color: #0f172a;
+            --bs-btn-hover-bg: #ffffff47;
+            --bs-btn-hover-border-color: #ffffff;
+            --bs-btn-active-color: #0f172a;
+            --bs-btn-active-bg: #ffffff;
+            --bs-btn-active-border-color: #ffffff;
+            color: #ffffff;
         }
 
         .section-carousel .carousel-inner {
@@ -246,7 +279,7 @@
                 @foreach ($heroSlides as $index => $slide)
                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}"
                         style="background-image: url('{{ $slide['image'] }}');">
-                        <div class="container h-100 d-flex align-items-center py-5">
+                        <div class="container h-100 d-flex align-items-start hero-slide-inner">
                             <div class="hero-content col-lg-8">
                                 <h1 class="display-4 fw-bold">{{ $slide['title'] }}</h1>
                                 <p class="lead mb-4">{{ $slide['subtitle'] }}</p>
