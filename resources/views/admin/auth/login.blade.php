@@ -14,7 +14,15 @@
             <div class="col-md-5">
                 <div class="card shadow-sm">
                     <div class="card-body p-4">
-                        <h4 class="mb-3">Admin Login</h4>
+                        <div class="text-center mb-4">
+                            @if ($settings?->logo_path)
+                                <img src="{{ asset('storage/' . $settings->logo_path) }}"
+                                    alt="{{ $settings->site_name ?? 'Site Logo' }}" class="mb-3"
+                                    style="max-height: 80px;">
+                            @endif
+                            <h4 class="mb-1">{{ $settings->site_name ?? config('app.name', 'Admin') }}</h4>
+                            <p class="text-muted mb-3">Admin Login</p>
+                        </div>
                         @if ($errors->any())
                             <div class="alert alert-danger">{{ $errors->first() }}</div>
                         @endif

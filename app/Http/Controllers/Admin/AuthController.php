@@ -26,7 +26,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            if (! $request->user()?->is_admin) {
+            $user = $request->user();
+            $adminRoles = ['Super Admin', 'Admin', 'Branch Admin', 'Product Admin'];
+
+            if (! $user?->is_admin && ! $user?->hasRole($adminRoles) && ! $user?->hasPermissionTo('access admin panel')) {
                 Auth::logout();
 
                 return back()->withErrors(['email' => 'This account is not an admin account.']);
@@ -50,6 +53,11 @@ class AuthController extends Controller
     public function showPasswordForm(): View
     {
         return view('admin.auth.password');
+    }
+
+    public function showProfile(): View
+    {
+        return view('admin.auth.profile');
     }
 
     public function updatePassword(Request $request): RedirectResponse
