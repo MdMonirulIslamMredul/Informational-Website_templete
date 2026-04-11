@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductSubcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -19,7 +21,10 @@ class ProductController extends Controller
 
     public function create()
     {
-        return view('admin.products.create');
+        return view('admin.products.create', [
+            'categories' => ProductCategory::orderBy('sort_order')->get(),
+            'subcategories' => ProductSubcategory::orderBy('sort_order')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -37,7 +42,11 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        return view('admin.products.edit', [
+            'product' => $product,
+            'categories' => ProductCategory::orderBy('sort_order')->get(),
+            'subcategories' => ProductSubcategory::orderBy('sort_order')->get(),
+        ]);
     }
 
     public function update(Request $request, Product $product)
@@ -75,6 +84,8 @@ class ProductController extends Controller
             'short_description' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['nullable', 'numeric'],
+            'product_category_id' => ['nullable', 'exists:product_categories,id'],
+            'product_subcategory_id' => ['nullable', 'exists:product_subcategories,id'],
             'is_featured' => ['nullable', 'boolean'],
             'status' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
@@ -83,7 +94,7 @@ class ProductController extends Controller
 
         $data['slug'] = $data['slug'] ?? Str::slug($data['title']);
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['status'] = $request->boolean('status', true);
+        $data['status'] = $request->boolean('status', false);
         $data['sort_order'] = $data['sort_order'] ?? 0;
 
         return $data;
