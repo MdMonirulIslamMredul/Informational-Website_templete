@@ -32,10 +32,38 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('contact.index') }}">Contact</a></li>
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white px-4 rounded ms-lg-3"
-                            href="{{ route('register') }}">Register</a>
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="{{ route('register') }}">Register</a>
                     </li>
                 @endguest
+
+                @auth
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown">{{ auth()->user()->name }}</a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            @if (auth()->user()->is_admin)
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li>
+                                    <form action="{{ route('admin.logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+                                </li>
+                            @else
+                                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endauth
             </ul>
         </div>
     </div>
