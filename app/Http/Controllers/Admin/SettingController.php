@@ -16,6 +16,11 @@ class SettingController extends Controller
         return view('admin.settings.edit', [
             'setting' => Setting::firstOrCreate([], [
                 'site_name' => 'SolarTech Services',
+                'primary_color' => '#0d6efd',
+                'secondary_color' => '#6c757d',
+                'accent_color' => '#f39c12',
+                'text_color' => '#333333',
+                'bg_color' => '#ffffff',
             ]),
         ]);
     }
@@ -24,6 +29,11 @@ class SettingController extends Controller
     {
         $data = $request->validate([
             'site_name' => ['required', 'string', 'max:255'],
+            'primary_color' => ['nullable', 'regex:/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/'],
+            'secondary_color' => ['nullable', 'regex:/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/'],
+            'accent_color' => ['nullable', 'regex:/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/'],
+            'text_color' => ['nullable', 'regex:/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/'],
+            'bg_color' => ['nullable', 'regex:/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'seo_keywords' => ['nullable', 'string', 'max:255'],
@@ -50,6 +60,12 @@ class SettingController extends Controller
             $data['favicon_path'] = $request->file('favicon')->store('settings', 'public');
         }
 
+        $data['primary_color'] = $this->normalizeColor($request->input('primary_color'), '#0d6efd');
+        $data['secondary_color'] = $this->normalizeColor($request->input('secondary_color'), '#6c757d');
+        $data['accent_color'] = $this->normalizeColor($request->input('accent_color'), '#f39c12');
+        $data['text_color'] = $this->normalizeColor($request->input('text_color'), '#333333');
+        $data['bg_color'] = $this->normalizeColor($request->input('bg_color'), '#ffffff');
+
         $data['social_links'] = [
             'facebook' => $request->input('facebook_url'),
             'linkedin' => $request->input('linkedin_url'),
@@ -61,5 +77,16 @@ class SettingController extends Controller
         $setting->update($data);
 
         return back()->with('success', 'Settings updated successfully.');
+    }
+
+    private function normalizeColor(?string $value, string $default): string
+    {
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return $default;
+        }
+
+        return preg_match('/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/', $value) ? strtolower($value) : $default;
     }
 }
