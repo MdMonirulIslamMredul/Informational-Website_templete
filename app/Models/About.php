@@ -19,6 +19,9 @@ class About extends Model
         'key_values',
         'years_experience',
         'establishment_year',
+        'mission',
+        'vision',
+        'history',
     ];
 
     protected $casts = [

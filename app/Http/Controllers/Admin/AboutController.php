@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\About;
+use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,19 +18,34 @@ class AboutController extends Controller
             'about' => About::firstOrCreate([], [
                 'title' => 'About Us',
             ]),
+            'setting' => Setting::firstOrCreate([], [
+                'site_name' => 'SolarTech Services',
+            ]),
         ]);
     }
 
     public function update(Request $request): RedirectResponse
     {
         $about = About::firstOrCreate([]);
+        $setting = Setting::firstOrCreate([]);
 
         $data = $this->validatedData($request);
+        $aboutContent = $data['about_content'] ?? null;
+        unset($data['about_content']);
+
         $data = $this->handleImages($request, $data, $about);
 
         $about->update($data);
 
-        return back()->with('success', 'About page updated successfully.');
+        // Update footer about summary and mirror mission/vision/history on settings
+        $setting->update([
+            'about_content' => $aboutContent,
+            'mission' => $data['mission'] ?? null,
+            'vision' => $data['vision'] ?? null,
+            'history' => $data['history'] ?? null,
+        ]);
+
+        return back()->with('success', 'About page content updated successfully.');
     }
 
     private function validatedData(Request $request): array
@@ -37,6 +53,10 @@ class AboutController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'page_details' => ['nullable', 'string'],
+            'mission' => ['nullable', 'string'],
+            'vision' => ['nullable', 'string'],
+            'history' => ['nullable', 'string'],
+            'about_content' => ['nullable', 'string'],
             'details1' => ['nullable', 'string'],
             'details2' => ['nullable', 'string'],
             'details3' => ['nullable', 'string'],
