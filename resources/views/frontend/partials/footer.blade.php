@@ -15,7 +15,7 @@
                     <div>
                         <h5 class="text-white mb-1">{{ $footerSetting?->site_name ?? 'SolarTech Services' }}</h5>
                         <p class="small mb-0 text-secondary">
-                            {{ $footerSetting?->company_intro ?? 'Delivering clean solar energy solutions with quality engineering and support.' }}
+                            {{ $footerSetting?->about_content ?: ($footerSetting?->company_intro ?? 'Delivering clean solar energy solutions with quality engineering and support.') }}
                         </p>
                     </div>
                 </div>
@@ -29,6 +29,7 @@
                     <a href="{{ route('about') }}" class="text-decoration-none text-light">About</a>
                     <a href="{{ route('products.index') }}" class="text-decoration-none text-light">Products</a>
                     <a href="{{ route('services.index') }}" class="text-decoration-none text-light">Services</a>
+                    <a href="{{ route('partners.index') }}" class="text-decoration-none text-light">Partners</a>
                     <a href="{{ route('blogs.index') }}" class="text-decoration-none text-light">Blog</a>
                 </div>
             </div>
