@@ -123,21 +123,6 @@
                     <input class="form-control" name="seo_keywords"
                         value="{{ old('seo_keywords', $setting->seo_keywords) }}">
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Facebook URL</label>
-                    <input class="form-control" name="facebook_url"
-                        value="{{ old('facebook_url', $setting->social_links['facebook'] ?? '') }}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">LinkedIn URL</label>
-                    <input class="form-control" name="linkedin_url"
-                        value="{{ old('linkedin_url', $setting->social_links['linkedin'] ?? '') }}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">YouTube URL</label>
-                    <input class="form-control" name="youtube_url"
-                        value="{{ old('youtube_url', $setting->social_links['youtube'] ?? '') }}">
-                </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Logo</label>
@@ -167,12 +152,35 @@
                             class="text-secondary {{ $setting->favicon_path ? 'd-none' : '' }}">No favicon uploaded</span>
                     </div>
                     <input type="file" class="form-control" name="favicon" id="faviconInput" accept="image/*,.ico">
-                    <div class="form-text">Allowed: ICO, PNG, JPG, JPEG, SVG. Recommended size: 32x32 px or 48x48 px. Max
-                        file size: 1 MB.</div>
+                    <div class="form-text">Allowed: ICO, PNG, JPG, JPEG, SVG. Recommended size: 32x32 px or 48x48 px. Max file size: 1 MB.</div>
+                </div>
+
+                <div class="col-12 mt-4 pt-3 border-top">
+                    <h5 class="text-dark fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-megaphone-fill text-primary"></i> Homepage Call To Action (CTA)
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark">CTA Title</label>
+                            <input class="form-control" name="cta_title" value="{{ old('cta_title', $setting->cta_title) }}" placeholder="e.g. Ready to switch to solar?">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold text-dark">CTA Button Text</label>
+                            <input class="form-control" name="cta_button_text" value="{{ old('cta_button_text', $setting->cta_button_text) }}" placeholder="e.g. Contact Us">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold text-dark">CTA Button Link</label>
+                            <input class="form-control" name="cta_button_link" value="{{ old('cta_button_link', $setting->cta_button_link) }}" placeholder="e.g. /contact">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold text-dark">CTA Description</label>
+                            <textarea class="form-control" name="cta_text" rows="2" placeholder="e.g. Talk to our experts and get a customized clean-energy plan.">{{ old('cta_text', $setting->cta_text) }}</textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button class="btn btn-primary mt-3">Save Settings</button>
+            <button class="btn btn-primary mt-4 px-4"><i class="bi bi-check-lg me-1"></i> Save Settings</button>
         </form>
     </div>
 @endsection
