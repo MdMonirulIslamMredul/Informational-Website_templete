@@ -37,7 +37,13 @@ class SettingController extends Controller
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'seo_keywords' => ['nullable', 'string', 'max:255'],
+            'cta_title' => ['nullable', 'string', 'max:255'],
+            'cta_text' => ['nullable', 'string'],
+            'cta_button_text' => ['nullable', 'string', 'max:120'],
+            'cta_button_link' => ['nullable', 'string', 'max:255'],
             'facebook_url' => ['nullable', 'url', 'max:255'],
+            'twitter_url' => ['nullable', 'url', 'max:255'],
+            'instagram_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'youtube_url' => ['nullable', 'url', 'max:255'],
             'logo' => ['nullable', 'image', 'max:2048'],
@@ -66,13 +72,27 @@ class SettingController extends Controller
         $data['text_color'] = $this->normalizeColor($request->input('text_color'), '#333333');
         $data['bg_color'] = $this->normalizeColor($request->input('bg_color'), '#ffffff');
 
-        $data['social_links'] = [
-            'facebook' => $request->input('facebook_url'),
-            'linkedin' => $request->input('linkedin_url'),
-            'youtube' => $request->input('youtube_url'),
-        ];
+        if ($request->hasAny(['facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url', 'youtube_url'])) {
+            $existingSocial = $setting->social_links ?? [];
+            $data['social_links'] = [
+                'facebook' => $request->input('facebook_url', $existingSocial['facebook'] ?? null),
+                'twitter' => $request->input('twitter_url', $existingSocial['twitter'] ?? ($existingSocial['x'] ?? null)),
+                'x' => $request->input('twitter_url', $existingSocial['x'] ?? ($existingSocial['twitter'] ?? null)),
+                'instagram' => $request->input('instagram_url', $existingSocial['instagram'] ?? null),
+                'linkedin' => $request->input('linkedin_url', $existingSocial['linkedin'] ?? null),
+                'youtube' => $request->input('youtube_url', $existingSocial['youtube'] ?? null),
+            ];
+        }
 
-        unset($data['logo'], $data['favicon'], $data['facebook_url'], $data['linkedin_url'], $data['youtube_url']);
+        unset(
+            $data['logo'],
+            $data['favicon'],
+            $data['facebook_url'],
+            $data['twitter_url'],
+            $data['instagram_url'],
+            $data['linkedin_url'],
+            $data['youtube_url']
+        );
 
         $setting->update($data);
 
