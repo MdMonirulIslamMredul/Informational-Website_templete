@@ -1,47 +1,47 @@
 @extends('admin.layouts.app')
-@section('title', 'Page Content')
+@section('title', 'Page Content - Merged')
 @section('content')
-    <div class="card p-4">
-        <h4 class="mb-3">Manage Page Content</h4>
-        <form method="POST" action="{{ route('admin.page-content.update') }}" enctype="multipart/form-data">
-            @csrf
-            <div class="row g-3">
-                <div class="col-md-12"><label class="form-label">About Title</label><input class="form-control"
-                        name="about_title" value="{{ old('about_title', $setting->about_title) }}"></div>
-                <div class="col-12"><label class="form-label">Company Intro</label>
-                    <textarea class="form-control" name="company_intro" rows="2">{{ old('company_intro', $setting->company_intro) }}</textarea>
-                </div>
-                <div class="col-md-6"><label class="form-label">CTA Title</label><input class="form-control"
-                        name="cta_title" value="{{ old('cta_title', $setting->cta_title) }}"></div>
-                <div class="col-md-3"><label class="form-label">CTA Button Text</label><input class="form-control"
-                        name="cta_button_text" value="{{ old('cta_button_text', $setting->cta_button_text) }}"></div>
-                <div class="col-md-3"><label class="form-label">CTA Link</label><input class="form-control"
-                        name="cta_button_link" value="{{ old('cta_button_link', $setting->cta_button_link) }}"></div>
-                <div class="col-12"><label class="form-label">CTA Text</label>
-                    <textarea class="form-control" name="cta_text" rows="2">{{ old('cta_text', $setting->cta_text) }}</textarea>
-                </div>
-                <div class="col-12"><label class="form-label">About Content</label>
-                    <textarea class="form-control" name="about_content" rows="3">{{ old('about_content', $setting->about_content) }}</textarea>
-                </div>
-                <div class="col-md-4"><label class="form-label">Mission</label>
-                    <textarea class="form-control" name="mission" rows="3">{{ old('mission', $setting->mission) }}</textarea>
-                </div>
-                <div class="col-md-4"><label class="form-label">Vision</label>
-                    <textarea class="form-control" name="vision" rows="3">{{ old('vision', $setting->vision) }}</textarea>
-                </div>
-                <div class="col-md-4"><label class="form-label">History</label>
-                    <textarea class="form-control" name="history" rows="3">{{ old('history', $setting->history) }}</textarea>
-                </div>
-                <div class="col-md-4"><label class="form-label">Contact Email</label><input class="form-control"
-                        name="contact_email" value="{{ old('contact_email', $setting->contact_email) }}"></div>
-                <div class="col-md-4"><label class="form-label">Contact Phone</label><input class="form-control"
-                        name="contact_phone" value="{{ old('contact_phone', $setting->contact_phone) }}"></div>
-                <div class="col-md-4"><label class="form-label">Address</label><input class="form-control"
-                        name="contact_address" value="{{ old('contact_address', $setting->contact_address) }}"></div>
-                <div class="col-12"><label class="form-label">Google Map Embed URL</label><input class="form-control"
-                        name="google_map_embed" value="{{ old('google_map_embed', $setting->google_map_embed) }}"></div>
+    <div class="card shadow-sm border-0 p-4">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-3 bg-primary-subtle text-primary p-3">
+                <i class="bi bi-info-circle-fill fs-3"></i>
             </div>
-            <button class="btn btn-primary mt-3">Save Content</button>
-        </form>
+            <div>
+                <h4 class="text-dark fw-bold mb-1">Page Content Has Been Unified</h4>
+                <div class="text-secondary">
+                    These settings have been merged into dedicated, easier-to-manage sections.
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-2">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="fw-bold text-dark"><i class="bi bi-file-earmark-person-fill text-primary me-2"></i>About Page &amp; Footer Summary</h5>
+                        <p class="text-secondary small mb-3">
+                            Manage About Us page content, mission, vision, milestone history, key values, narrative blocks, and the public footer summary.
+                        </p>
+                    </div>
+                    <a href="{{ route('admin.about.edit') }}" class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2">
+                        Go to About Page <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="fw-bold text-dark"><i class="bi bi-megaphone-fill text-success me-2"></i>Homepage Call To Action (CTA)</h5>
+                        <p class="text-secondary small mb-3">
+                            Manage homepage call-to-action title, description, button label, and destination link under General Settings.
+                        </p>
+                    </div>
+                    <a href="{{ route('admin.settings.edit') }}" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2">
+                        Go to General Settings <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
