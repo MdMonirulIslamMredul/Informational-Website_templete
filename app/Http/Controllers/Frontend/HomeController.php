@@ -8,6 +8,7 @@ use App\Models\Blog;
 use App\Models\Counter;
 use App\Models\Faq;
 use App\Models\HomepageCarousel;
+use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Testimonial;
 use App\Models\Service;
@@ -29,6 +30,7 @@ class HomeController extends Controller
             'blogs' => Blog::where('is_published', true)->latest()->take(3)->get(),
             'teamMembers' => TeamMember::where('status', true)->orderBy('sort_order')->take(4)->get(),
             'faqs' => Faq::where('status', true)->orderBy('order')->orderBy('id')->get(),
+            'partners' => Partner::where('status', true)->orderBy('sort_order')->orderBy('id')->get(),
         ]);
     }
 }
