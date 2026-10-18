@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Contact;
 use App\Models\Gallery;
+use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\TeamMember;
@@ -20,6 +21,7 @@ class DashboardController extends Controller
                 'services' => Service::count(),
                 'blogs' => Blog::count(),
                 'team_members' => TeamMember::count(),
+                'partners' => Partner::count(),
                 'galleries' => Gallery::count(),
                 'contacts' => Contact::count(),
             ],
