@@ -3,46 +3,244 @@
 @section('title', $setting->meta_title ?? 'Home')
 
 @push('styles')
+    <link rel="stylesheet" href="{{ asset('vendor/swiper/swiper-bundle.min.css') }}">
     <style>
-        .hero-slider .carousel-item {
-            min-height: 82vh;
-            background-size: cover;
-            background-position: center;
+        /* Hero Slider: Full Viewport Continuous Track */
+        .hero-slider {
             position: relative;
+            overflow: hidden;
+            background: #0f172a;
+            height: 82vh;
+            min-height: 560px;
         }
 
         @media (min-width: 992px) {
-            .hero-slider .carousel-item {
-                min-height: 100vh;
+            .hero-slider {
+                height: 100vh;
+                min-height: 650px;
             }
         }
 
-        .hero-slider .carousel-item::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(120deg, rgba(15, 23, 42, 0.75), rgba(15, 118, 110, 0.45));
+        .hero-swiper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        .hero-slider .hero-content {
+        .hero-swiper .swiper-wrapper {
+            height: 100%;
+            display: flex;
+        }
+
+        .hero-swiper .swiper-slide {
             position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: stretch;
+            background: #0f172a;
+            height: 100% !important;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .hero-swiper .hero-slide-bg {
+            position: absolute;
+            top: -4%;
+            left: -4%;
+            width: 108%;
+            height: 108%;
+            background-size: cover;
+            background-position: center;
+            transform: scale(1);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        /* Continuous Ken Burns zoom animation for as long as the slide is shown */
+        .hero-swiper .swiper-slide-active .hero-slide-bg {
+            animation: heroContinuousZoom 8s ease-out forwards;
+        }
+
+        .hero-swiper .swiper-slide:not(.swiper-slide-active) .hero-slide-bg {
+            animation: none;
+            transform: scale(1);
+        }
+
+        @keyframes heroContinuousZoom {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.12);
+            }
+        }
+
+        .hero-swiper .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(15, 23, 42, 0.80), rgba(15, 118, 110, 0.45));
             z-index: 2;
+        }
+
+        .hero-swiper .hero-content {
+            position: relative;
+            z-index: 3;
             color: #fff;
         }
 
-        .hero-slider .hero-slide-inner {
-            padding-top: 6rem !important;
-            padding-bottom: 4rem;
+        .hero-swiper .hero-slide-inner {
+            padding-top: 5.5rem;
+            padding-bottom: 3.5rem;
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
         }
 
         @media (min-width: 992px) {
-            .hero-slider .hero-slide-inner {
-                padding-top: clamp(6rem, 14vh, 11rem) !important;
+            .hero-swiper .hero-slide-inner {
+                padding-top: 5rem;
+                padding-bottom: 2.5rem;
             }
 
-            .hero-slider .hero-content {
+            .hero-swiper .hero-content {
                 margin-top: 0;
             }
+        }
+
+        /* Flawless Text & Button Entrance Animations */
+        .hero-swiper .swiper-slide .hero-title {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-swiper .swiper-slide .hero-subtitle {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-swiper .swiper-slide .hero-actions {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-swiper .swiper-slide-active .hero-title {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.18s;
+        }
+
+        .hero-swiper .swiper-slide-active .hero-subtitle {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.36s;
+        }
+
+        .hero-swiper .swiper-slide-active .hero-actions {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.52s;
+        }
+
+        /* Navigation Arrows */
+        .hero-swiper-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3.25rem;
+            height: 3.25rem;
+            border-radius: 50%;
+            background-color: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.25s ease;
+            opacity: 0.75;
+        }
+
+        .hero-swiper-btn:hover {
+            background-color: rgba(15, 23, 42, 0.9);
+            border-color: rgba(255, 255, 255, 0.7);
+            color: #ffffff;
+            transform: translateY(-50%) scale(1.12);
+            opacity: 1;
+        }
+
+        .hero-swiper-prev {
+            left: 1.5rem;
+        }
+
+        .hero-swiper-next {
+            right: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-swiper-btn {
+                display: none;
+            }
+        }
+
+        /* Custom Pagination */
+        .hero-swiper-pagination {
+            position: absolute;
+            bottom: 2.2rem !important;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .hero-swiper-pagination .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            opacity: 0.65;
+            margin: 0 !important;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .hero-swiper-pagination .swiper-pagination-bullet-active {
+            width: 36px;
+            border-radius: 12px;
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+            opacity: 1;
+        }
+
+        /* Autoplay Progress Line */
+        .hero-autoplay-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: 10;
+        }
+
+        .hero-autoplay-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
         }
 
         .hero-slider .btn-outline-light {
@@ -211,6 +409,122 @@
                 padding: 0 1rem;
             }
         }
+
+        /* Partners Infinity Carousel Marquee */
+        .partners-infinity-section {
+            background: #ffffff;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .partner-marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 1.25rem 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .partner-marquee-track {
+            display: flex;
+            width: max-content;
+            user-select: none;
+        }
+        .partner-marquee-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 1.25rem;
+            flex-shrink: 0;
+            width: max-content;
+            animation: partnerMarqueeScroll 32s linear infinite;
+            padding-right: 1.25rem;
+        }
+        .partner-marquee-wrapper:hover .partner-marquee-group {
+            animation-play-state: paused;
+        }
+        @keyframes partnerMarqueeScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        .partner-marquee-item {
+            flex-shrink: 0;
+        }
+        .partner-marquee-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 190px;
+            height: 80px;
+            padding: 0.35rem 0.85rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            color: #1e293b;
+        }
+        .partner-marquee-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: #0284c7;
+            box-shadow: 0 10px 20px rgba(2, 132, 199, 0.12);
+            color: #0284c7;
+        }
+        .partner-marquee-img {
+            max-height: 58px;
+            max-width: 172px;
+            width: auto;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(80%) opacity(0.85);
+            transition: all 0.3s ease;
+        }
+        .partner-marquee-card:hover .partner-marquee-img {
+            filter: grayscale(0%) opacity(1);
+        }
+        .partner-marquee-fallback {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .partner-marquee-name {
+            color: #334155;
+            transition: color 0.2s ease;
+        }
+        .partner-marquee-card:hover .partner-marquee-name {
+            color: #0284c7;
+        }
+
+        /* Dark mode adjustments */
+        html[data-theme='dark'] .partners-infinity-section {
+            background: #0b1329;
+            border-color: #1e293b;
+        }
+        html[data-theme='dark'] .partner-marquee-card {
+            background: #0f172a;
+            border-color: #1e293b;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            color: #f1f5f9;
+        }
+        html[data-theme='dark'] .partner-marquee-card:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 12px 24px rgba(56, 189, 248, 0.2);
+        }
+        html[data-theme='dark'] .partner-marquee-name {
+            color: #f1f5f9;
+        }
+        html[data-theme='dark'] .partner-marquee-img {
+            filter: brightness(0.9) grayscale(70%);
+        }
+        html[data-theme='dark'] .partner-marquee-card:hover .partner-marquee-img {
+            filter: brightness(1) grayscale(0%);
+        }
     </style>
 @endpush
 
@@ -263,27 +577,21 @@
             ->chunk(3)
             ->values();
         $faqItems = collect($faqs ?? []);
+        $partnerItems = collect($partners ?? []);
     @endphp
 
-    <section class="hero-slider" data-aos="fade-up">
-        <div id="homepageHeroSlider" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-indicators">
+    <section class="hero-slider">
+        <div class="swiper hero-swiper">
+            <div class="swiper-wrapper">
                 @foreach ($heroSlides as $index => $slide)
-                    <button type="button" data-bs-target="#homepageHeroSlider" data-bs-slide-to="{{ $index }}"
-                        class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}"
-                        aria-label="Slide {{ $index + 1 }}"></button>
-                @endforeach
-            </div>
-
-            <div class="carousel-inner">
-                @foreach ($heroSlides as $index => $slide)
-                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}"
-                        style="background-image: url('{{ $slide['image'] }}');">
-                        <div class="container h-100 d-flex align-items-start hero-slide-inner">
+                    <div class="swiper-slide">
+                        <div class="hero-slide-bg" style="background-image: url('{{ $slide['image'] }}');"></div>
+                        <div class="hero-overlay"></div>
+                        <div class="container h-100 d-flex align-items-center hero-slide-inner">
                             <div class="hero-content col-lg-8">
-                                <h1 class="display-4 fw-bold">{{ $slide['title'] }}</h1>
-                                <p class="lead mb-4">{{ $slide['subtitle'] }}</p>
-                                <div class="d-flex flex-wrap gap-2">
+                                <h1 class="display-4 fw-bold hero-title">{{ $slide['title'] }}</h1>
+                                <p class="lead mb-4 hero-subtitle">{{ $slide['subtitle'] }}</p>
+                                <div class="d-flex flex-wrap gap-2 hero-actions">
                                     <a href="{{ $setting->cta_button_link ?? route('contact.index') }}"
                                         class="btn btn-warning btn-lg">{{ $setting->cta_button_text ?? 'Get Consultation' }}</a>
                                     <a href="{{ route('services.index') }}" class="btn btn-outline-light btn-lg">Our
@@ -295,14 +603,21 @@
                 @endforeach
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#homepageHeroSlider" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+            {{-- Navigation Arrows --}}
+            <button class="hero-swiper-btn hero-swiper-prev" type="button" aria-label="Previous Slide">
+                <i class="bi bi-chevron-left"></i>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#homepageHeroSlider" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+            <button class="hero-swiper-btn hero-swiper-next" type="button" aria-label="Next Slide">
+                <i class="bi bi-chevron-right"></i>
             </button>
+
+            {{-- Pagination Dots --}}
+            <div class="hero-swiper-pagination"></div>
+
+            {{-- Autoplay Progress Line --}}
+            <div class="hero-autoplay-progress">
+                <div class="hero-autoplay-progress-fill"></div>
+            </div>
         </div>
     </section>
 
@@ -331,11 +646,6 @@
         @endphp
 
         <div class="container">
-            <div class="section-header-modern" data-aos="fade-up" data-aos-duration="1200">
-                {{-- <span class="section-subtitle-modern">About Us</span> --}}
-                <h2 class="section-title-modern">{{ $about?->title ?? 'About Us' }}</h2>
-            </div>
-
             <div class="row gx-5 align-items-center about-row">
                 <div class="col-lg-6" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200">
                     <div class="about-image-wrap" style="position:relative;">
@@ -775,19 +1085,246 @@
         </section>
     @endif
 
+    {{-- PARTNERS INFINITY CAROUSEL SECTION --}}
+    @php
+        $partnerList = $partnerItems;
+        if ($partnerList->isEmpty()) {
+            $partnerList = collect([
+                (object)[
+                    'name' => 'SMA Solar Technology',
+                    'image' => null,
+                    'website_url' => 'https://www.sma.de/en',
+                    'fallback_icon' => 'bi-sun-fill',
+                    'fallback_color' => '#f59e0b',
+                ],
+                (object)[
+                    'name' => 'Tesla Energy',
+                    'image' => null,
+                    'website_url' => 'https://www.tesla.com/energy',
+                    'fallback_icon' => 'bi-lightning-charge-fill',
+                    'fallback_color' => '#ef4444',
+                ],
+                (object)[
+                    'name' => 'Siemens Renewable',
+                    'image' => null,
+                    'website_url' => 'https://www.siemens.com',
+                    'fallback_icon' => 'bi-cpu-fill',
+                    'fallback_color' => '#0d9488',
+                ],
+                (object)[
+                    'name' => 'SunPower Systems',
+                    'image' => null,
+                    'website_url' => 'https://us.sunpower.com',
+                    'fallback_icon' => 'bi-brightness-high-fill',
+                    'fallback_color' => '#f97316',
+                ],
+                (object)[
+                    'name' => 'Huawei Smart PV',
+                    'image' => null,
+                    'website_url' => 'https://solar.huawei.com',
+                    'fallback_icon' => 'bi-router-fill',
+                    'fallback_color' => '#dc2626',
+                ],
+                (object)[
+                    'name' => 'Enphase Energy',
+                    'image' => null,
+                    'website_url' => 'https://enphase.com',
+                    'fallback_icon' => 'bi-battery-charging',
+                    'fallback_color' => '#0284c7',
+                ],
+                (object)[
+                    'name' => 'Schneider Electric',
+                    'image' => null,
+                    'website_url' => 'https://www.se.com',
+                    'fallback_icon' => 'bi-gear-wide-connected',
+                    'fallback_color' => '#16a34a',
+                ],
+                (object)[
+                    'name' => 'Canadian Solar',
+                    'image' => null,
+                    'website_url' => 'https://www.canadiansolar.com',
+                    'fallback_icon' => 'bi-globe-americas',
+                    'fallback_color' => '#b91c1c',
+                ],
+            ]);
+        }
+
+        // Multiply items if count is small so the seamless loop fills any screen width with compact spacing
+        if ($partnerList->isNotEmpty() && $partnerList->count() < 12) {
+            $multiplied = collect();
+            while ($multiplied->count() < 12) {
+                $multiplied = $multiplied->concat($partnerList);
+            }
+            $partnerList = $multiplied;
+        }
+    @endphp
+
+    <section class="py-5 partners-infinity-section position-relative overflow-hidden">
+        <div class="container mb-4 text-center" data-aos="fade-up">
+            <span class="section-subtitle-modern">Strategic Alliances</span>
+            <h2 class="section-title-modern">Trusted by Leading Technology & Industry Partners</h2>
+            <p class="text-secondary mx-auto mt-2" style="max-width: 650px;">
+                Collaborating with world-class manufacturers, renewable innovators, and certified suppliers to deliver top-tier clean energy.
+            </p>
+        </div>
+
+        <div class="partner-marquee-wrapper" data-aos="fade-up" data-aos-delay="100">
+            <div class="partner-marquee-track">
+                {{-- Track 1 --}}
+                <div class="partner-marquee-group">
+                    @foreach ($partnerList as $partner)
+                        <div class="partner-marquee-item">
+                            @if (!empty($partner->website_url))
+                                <a href="{{ $partner->website_url }}" target="_blank" rel="noopener noreferrer" class="partner-marquee-card" title="{{ $partner->name }}">
+                            @else
+                                <div class="partner-marquee-card" title="{{ $partner->name }}">
+                            @endif
+
+                                @if (!empty($partner->image))
+                                    <img src="{{ asset('storage/' . $partner->image) }}" alt="{{ $partner->name }}" class="partner-marquee-img" loading="lazy">
+                                @else
+                                    <div class="partner-marquee-fallback">
+                                        <i class="bi {{ $partner->fallback_icon ?? 'bi-building' }} me-2" style="color: {{ $partner->fallback_color ?? '#0284c7' }};"></i>
+                                        <span class="partner-marquee-name">{{ $partner->name }}</span>
+                                    </div>
+                                @endif
+
+                            @if (!empty($partner->website_url))
+                                </a>
+                            @else
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- Track 2 (Duplicate for infinite seamless loop) --}}
+                <div class="partner-marquee-group" aria-hidden="true">
+                    @foreach ($partnerList as $partner)
+                        <div class="partner-marquee-item">
+                            @if (!empty($partner->website_url))
+                                <a href="{{ $partner->website_url }}" target="_blank" rel="noopener noreferrer" class="partner-marquee-card" tabindex="-1">
+                            @else
+                                <div class="partner-marquee-card">
+                            @endif
+
+                                @if (!empty($partner->image))
+                                    <img src="{{ asset('storage/' . $partner->image) }}" alt="{{ $partner->name }}" class="partner-marquee-img" loading="lazy">
+                                @else
+                                    <div class="partner-marquee-fallback">
+                                        <i class="bi {{ $partner->fallback_icon ?? 'bi-building' }} me-2" style="color: {{ $partner->fallback_color ?? '#0284c7' }};"></i>
+                                        <span class="partner-marquee-name">{{ $partner->name }}</span>
+                                    </div>
+                                @endif
+
+                            @if (!empty($partner->website_url))
+                                </a>
+                            @else
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="200">
+            <a href="{{ route('partners.index') }}" class="btn btn-outline-primary rounded-pill px-4 btn-sm fw-semibold">
+                Explore All Partners <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </section>
+
     <section class="py-5">
         <div class="container" data-aos="fade-up">
             <div class="card p-4 p-lg-5 text-center">
                 <h3>{{ $setting->cta_title ?? 'Ready to switch to solar?' }}</h3>
                 <p class="text-secondary">
                     {{ $setting->cta_text ?? 'Talk to our experts and get a customized clean-energy plan.' }}</p>
-                <a href="{{ route('contact.index') }}" class="btn btn-dark">Contact Us</a>
+                <div>
+                    <a href="{{ !empty($setting->cta_button_link) ? $setting->cta_button_link : route('contact.index') }}" class="btn btn-primary px-4 py-2">
+                        {{ !empty($setting->cta_button_text) ? $setting->cta_button_text : 'Contact Us' }}
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
     @push('scripts')
+        <script src="{{ asset('vendor/swiper/swiper-bundle.min.js') }}"></script>
         <script>
+            // Ensure page starts at the top on reload
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+            window.scrollTo(0, 0);
+
+            // Hero Slider: Swiper continuous track (zero white portion), auto-change, left-click drag & touch swipe
+            (function() {
+                const initHeroSwiper = function() {
+                    const swiperEl = document.querySelector('.hero-swiper');
+                    if (!swiperEl) return;
+
+                    const progressFill = document.querySelector('.hero-autoplay-progress-fill');
+                    const AUTOPLAY_TIME = 5000;
+
+                    const heroSwiper = new Swiper('.hero-swiper', {
+                        loop: true,
+                        speed: 850,
+                        grabCursor: true,
+                        allowTouchMove: true,
+                        touchRatio: 1,
+                        resistance: true,
+                        resistanceRatio: 0.85,
+                        preventClicks: true,
+                        preventClicksPropagation: true,
+                        autoplay: {
+                            delay: AUTOPLAY_TIME,
+                            disableOnInteraction: false,
+                            pauseOnMouseEnter: true,
+                        },
+                        navigation: {
+                            nextEl: '.hero-swiper-next',
+                            prevEl: '.hero-swiper-prev',
+                        },
+                        pagination: {
+                            el: '.hero-swiper-pagination',
+                            clickable: true,
+                        },
+                        on: {
+                            slideChangeTransitionStart() {
+                                const activeSlide = this.slides[this.activeIndex];
+                                if (activeSlide) {
+                                    const bg = activeSlide.querySelector('.hero-slide-bg');
+                                    if (bg) {
+                                        bg.style.animation = 'none';
+                                        bg.offsetHeight;
+                                        bg.style.animation = '';
+                                    }
+                                }
+                            },
+                            autoplayTimeLeft(s, time, progress) {
+                                if (progressFill) {
+                                    progressFill.style.width = Math.min(100, Math.max(0, (1 - progress) * 100)) + '%';
+                                }
+                            },
+                            slideChange() {
+                                if (progressFill) {
+                                    progressFill.style.width = '0%';
+                                }
+                            }
+                        }
+                    });
+                };
+
+                if (typeof Swiper !== 'undefined') {
+                    initHeroSwiper();
+                } else {
+                    window.addEventListener('load', initHeroSwiper);
+                }
+            })();
+
+            // Counter animation
             (function() {
                 const counterSection = document.querySelector('.counter-section');
 
