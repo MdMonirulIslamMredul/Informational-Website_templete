@@ -83,24 +83,30 @@
 
             <div class="row g-4 align-items-center">
                 <div class="col-lg-6" data-aos="fade-right">
-                    <img src="{{ $image1 }}" alt="About Image 1" class="img-fluid rounded-4 shadow-sm">
+                    <img src="{{ $image1 }}" alt="About Image 1" class="img-fluid rounded-4 shadow-sm w-100" style="max-height: 420px; object-fit: cover;">
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
-                    <div class="card p-4 h-100 border-0 shadow-sm rounded-4">
-                        <h4>Details 1</h4>
-                        <div>{!! $about?->details1 ?? '<p>Share your first key narrative here from admin.</p>' !!}</div>
+                    <div class="card p-4 p-lg-5 h-100 border-0 shadow-sm rounded-4">
+                        <div class="d-inline-flex align-items-center gap-2 mb-2 text-primary fw-semibold small">
+                            <i class="bi bi-gear-wide-connected"></i> Engineering &amp; Excellence
+                        </div>
+                        <h3 class="h4 fw-bold mb-3">Our Engineering Approach</h3>
+                        <div class="text-secondary leading-relaxed">{!! $about?->details1 ?? '<p>Share your first key narrative here from admin.</p>' !!}</div>
                     </div>
                 </div>
             </div>
 
             <div class="row g-4 align-items-center mt-1">
                 <div class="col-lg-6 order-lg-2" data-aos="fade-left">
-                    <img src="{{ $image2 }}" alt="About Image 2" class="img-fluid rounded-4 shadow-sm">
+                    <img src="{{ $image2 }}" alt="About Image 2" class="img-fluid rounded-4 shadow-sm w-100" style="max-height: 420px; object-fit: cover;">
                 </div>
                 <div class="col-lg-6 order-lg-1" data-aos="fade-right">
-                    <div class="card p-4 h-100 border-0 shadow-sm rounded-4">
-                        <h4>Details 2</h4>
-                        <div>{!! $about?->details2 ?? '<p>Share your second key narrative here from admin.</p>' !!}</div>
+                    <div class="card p-4 p-lg-5 h-100 border-0 shadow-sm rounded-4">
+                        <div class="d-inline-flex align-items-center gap-2 mb-2 text-success fw-semibold small">
+                            <i class="bi bi-shield-check"></i> Quality &amp; Reliability
+                        </div>
+                        <h3 class="h4 fw-bold mb-3">Sustainable Standards</h3>
+                        <div class="text-secondary leading-relaxed">{!! $about?->details2 ?? '<p>Share your second key narrative here from admin.</p>' !!}</div>
                     </div>
                 </div>
             </div>
@@ -129,14 +135,20 @@
             <div class="row g-4 mt-1">
                 <div class="col-md-6" data-aos="fade-up">
                     <div class="card p-4 h-100 border-0 shadow-sm rounded-4">
-                        <h4>Details 3</h4>
-                        <div>{!! $about?->details3 ?? '<p>Share your third key narrative here from admin.</p>' !!}</div>
+                        <div class="d-inline-flex align-items-center gap-2 mb-2 text-warning fw-semibold small">
+                            <i class="bi bi-lightning-charge-fill"></i> Modern Innovation
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Intelligent Energy Solutions</h4>
+                        <div class="text-secondary leading-relaxed">{!! $about?->details3 ?? '<p>Share your third key narrative here from admin.</p>' !!}</div>
                     </div>
                 </div>
                 <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="card p-4 h-100 border-0 shadow-sm rounded-4">
-                        <h4>Details 4</h4>
-                        <div>{!! $about?->details4 ?? '<p>Share your fourth key narrative here from admin.</p>' !!}</div>
+                        <div class="d-inline-flex align-items-center gap-2 mb-2 text-info fw-semibold small">
+                            <i class="bi bi-people-fill"></i> Client Partnership
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Dedicated Support &amp; Care</h4>
+                        <div class="text-secondary leading-relaxed">{!! $about?->details4 ?? '<p>Share your fourth key narrative here from admin.</p>' !!}</div>
                     </div>
                 </div>
             </div>
