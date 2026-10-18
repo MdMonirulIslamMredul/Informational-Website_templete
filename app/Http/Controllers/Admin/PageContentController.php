@@ -32,10 +32,6 @@ class PageContentController extends Controller
             'mission' => ['nullable', 'string'],
             'vision' => ['nullable', 'string'],
             'history' => ['nullable', 'string'],
-            'contact_email' => ['nullable', 'email', 'max:160'],
-            'contact_phone' => ['nullable', 'string', 'max:60'],
-            'contact_address' => ['nullable', 'string'],
-            'google_map_embed' => ['nullable', 'string'],
         ]);
 
         $setting = Setting::firstOrCreate([]);
