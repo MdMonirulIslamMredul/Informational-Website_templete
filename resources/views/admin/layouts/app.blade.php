@@ -35,6 +35,33 @@
             color: #fff;
         }
 
+        .sidebar [data-bs-toggle="collapse"] .bi-chevron-down {
+            transition: transform 0.25s ease-in-out;
+        }
+
+        .sidebar [data-bs-toggle="collapse"][aria-expanded="true"] .bi-chevron-down,
+        .sidebar [data-bs-toggle="collapse"]:not(.collapsed) .bi-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .sidebar .collapse a {
+            padding: 8px 12px;
+            font-size: 0.92rem;
+            margin-bottom: 3px;
+        }
+
+        .sidebar .collapse a.active {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+        }
+
+        .sidebar a.parent-active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
         .content {
             min-height: 100vh;
         }
