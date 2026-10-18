@@ -23,6 +23,13 @@
             </div>
         </div>
         <div class="col-md-4 col-lg-2">
+            <a href="{{ route('admin.partners.index') }}" class="text-decoration-none text-reset">
+                <div class="card p-3"><small>Partners</small>
+                    <h4>{{ $stats['partners'] ?? 0 }}</h4>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-lg-2">
             <div class="card p-3"><small>Gallery</small>
                 <h4>{{ $stats['galleries'] }}</h4>
             </div>
