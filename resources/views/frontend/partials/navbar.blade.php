@@ -20,6 +20,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Products</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('services.index') }}">Services</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('team.index') }}">Team</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('partners.index') }}">Partners</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('blogs.index') }}">Blog</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button"

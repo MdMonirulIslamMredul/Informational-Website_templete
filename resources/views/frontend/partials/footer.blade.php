@@ -1,49 +1,231 @@
 @php
     $footerSetting = $settings ?? null;
     $social = $footerSetting?->social_links ?? [];
+
+    $mapEmbed = $footerSetting?->google_map_embed;
+    $mapSrc = null;
+    if (!empty($mapEmbed)) {
+        if (preg_match('/src=["\']([^"\']+)["\']/', $mapEmbed, $matches)) {
+            $mapSrc = $matches[1];
+        } else {
+            $mapSrc = $mapEmbed;
+        }
+    }
+    if (!$mapSrc && !empty($footerSetting?->contact_address)) {
+        $mapSrc = 'https://maps.google.com/maps?q=' . urlencode($footerSetting->contact_address) . '&t=&z=13&ie=UTF8&iwloc=&output=embed';
+    }
 @endphp
-<footer class="pt-5 pb-3 mt-5">
+
+<footer class="pt-5 pb-3 mt-5 position-relative">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-5">
+        <div class="row g-4 justify-content-between">
+            {{-- Col 1: Brand & Contact Info --}}
+            <div class="col-lg-4 col-md-6">
                 <div class="d-flex align-items-center gap-3 mb-3">
                     @if ($footerSetting?->logo_path)
                         <img src="{{ asset('storage/' . $footerSetting->logo_path) }}"
                             alt="{{ $footerSetting?->site_name ?? 'SolarTech Services' }} logo"
-                            style="max-height: 56px; width: auto; background: #fff; padding: 6px 10px; border-radius: 12px;">
+                            style="max-height: 50px; width: auto; background: #fff; padding: 6px 10px; border-radius: 10px;">
                     @endif
                     <div>
-                        <h5 class="text-white mb-1">{{ $footerSetting?->site_name ?? 'SolarTech Services' }}</h5>
-                        <p class="small mb-0 text-secondary">
-                            {{ $footerSetting?->about_content ?: ($footerSetting?->company_intro ?? 'Delivering clean solar energy solutions with quality engineering and support.') }}
-                        </p>
+                        <h5 class="text-white mb-0 fw-bold">{{ $footerSetting?->site_name ?? 'SolarTech Services' }}</h5>
                     </div>
                 </div>
-                <p class="small mb-1"><i class="bi bi-geo-alt"></i> {{ $footerSetting?->contact_address }}</p>
-                <p class="small mb-1"><i class="bi bi-envelope"></i> {{ $footerSetting?->contact_email }}</p>
-                <p class="small mb-0"><i class="bi bi-telephone"></i> {{ $footerSetting?->contact_phone }}</p>
-            </div>
-            <div class="col-lg-3">
-                <h6 class="text-white">Quick Links</h6>
-                <div class="d-flex flex-column gap-2">
-                    <a href="{{ route('about') }}" class="text-decoration-none text-light">About</a>
-                    <a href="{{ route('products.index') }}" class="text-decoration-none text-light">Products</a>
-                    <a href="{{ route('services.index') }}" class="text-decoration-none text-light">Services</a>
-                    <a href="{{ route('partners.index') }}" class="text-decoration-none text-light">Partners</a>
-                    <a href="{{ route('blogs.index') }}" class="text-decoration-none text-light">Blog</a>
+                <p class="small text-secondary mb-3 pe-lg-3 leading-relaxed">
+                    {{ $footerSetting?->about_content ?: ($footerSetting?->company_intro ?? 'Delivering clean solar energy solutions with quality engineering and support.') }}
+                </p>
+                <div class="d-flex flex-column gap-2 small text-secondary">
+                    @if ($footerSetting?->contact_address)
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-geo-alt-fill text-danger mt-1"></i>
+                            <span>{{ $footerSetting->contact_address }}</span>
+                        </div>
+                    @endif
+                    @if ($footerSetting?->contact_email)
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-envelope-fill text-primary"></i>
+                            <a href="mailto:{{ $footerSetting->contact_email }}" class="text-secondary text-decoration-none hover-white">
+                                {{ $footerSetting->contact_email }}
+                            </a>
+                        </div>
+                    @endif
+                    @if ($footerSetting?->contact_phone)
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-telephone-fill text-success"></i>
+                            <a href="tel:{{ $footerSetting->contact_phone }}" class="text-secondary text-decoration-none hover-white">
+                                {{ $footerSetting->contact_phone }}
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
-            <div class="col-lg-4">
-                <h6 class="text-white">Follow Us</h6>
-                <div class="d-flex gap-3 fs-5">
-                    <a class="text-light" href="{{ $social['facebook'] ?? '#' }}"><i class="bi bi-facebook"></i></a>
-                    <a class="text-light" href="{{ $social['linkedin'] ?? '#' }}"><i class="bi bi-linkedin"></i></a>
-                    <a class="text-light" href="{{ $social['youtube'] ?? '#' }}"><i class="bi bi-youtube"></i></a>
+
+            {{-- Col 2: Quick Links --}}
+            <div class="col-lg-2 col-md-3 col-6">
+                <h6 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-link-45deg text-primary"></i> Quick Links
+                </h6>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{{ route('about') }}" class="footer-nav-link text-decoration-none">
+                        <i class="bi bi-chevron-right small text-primary opacity-50"></i> About Us
+                    </a>
+                    <a href="{{ route('products.index') }}" class="footer-nav-link text-decoration-none">
+                        <i class="bi bi-chevron-right small text-primary opacity-50"></i> Products
+                    </a>
+                    <a href="{{ route('services.index') }}" class="footer-nav-link text-decoration-none">
+                        <i class="bi bi-chevron-right small text-primary opacity-50"></i> Services
+                    </a>
+                    <a href="{{ route('partners.index') }}" class="footer-nav-link text-decoration-none">
+                        <i class="bi bi-chevron-right small text-primary opacity-50"></i> Partners
+                    </a>
+                    <a href="{{ route('blogs.index') }}" class="footer-nav-link text-decoration-none">
+                        <i class="bi bi-chevron-right small text-primary opacity-50"></i> Blog
+                    </a>
+                    <a href="{{ route('contact.index') }}" class="footer-nav-link text-decoration-none">
+                        <i class="bi bi-chevron-right small text-primary opacity-50"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+
+            {{-- Col 3: Follow Us & Social Media --}}
+            <div class="col-lg-2 col-md-3 col-6">
+                <h6 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-share-fill text-primary"></i> Follow Us
+                </h6>
+                @php
+                    $hasFacebook = !empty($social['facebook']);
+                    $hasTwitter = !empty($social['twitter']) || !empty($social['x']);
+                    $hasInstagram = !empty($social['instagram']);
+                    $hasLinkedin = !empty($social['linkedin']);
+                    $hasYoutube = !empty($social['youtube']);
+                    $hasAnySocial = $hasFacebook || $hasTwitter || $hasInstagram || $hasLinkedin || $hasYoutube;
+                @endphp
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    @if ($hasFacebook || !$hasAnySocial)
+                        <a class="footer-social-btn facebook" href="{{ $social['facebook'] ?? '#' }}" target="_blank" rel="noopener" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    @endif
+                    @if ($hasTwitter || !$hasAnySocial)
+                        <a class="footer-social-btn twitter" href="{{ $social['twitter'] ?? ($social['x'] ?? '#') }}" target="_blank" rel="noopener" title="X (Twitter)">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+                    @endif
+                    @if ($hasInstagram || !$hasAnySocial)
+                        <a class="footer-social-btn instagram" href="{{ $social['instagram'] ?? '#' }}" target="_blank" rel="noopener" title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    @endif
+                    @if ($hasLinkedin || !$hasAnySocial)
+                        <a class="footer-social-btn linkedin" href="{{ $social['linkedin'] ?? '#' }}" target="_blank" rel="noopener" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                    @endif
+                    @if ($hasYoutube || !$hasAnySocial)
+                        <a class="footer-social-btn youtube" href="{{ $social['youtube'] ?? '#' }}" target="_blank" rel="noopener" title="YouTube">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                    @endif
+                </div>
+                <div class="small text-secondary">
+                    Stay connected with our community and project showcases across social channels.
+                </div>
+            </div>
+
+            {{-- Col 4: Google Map Embed View --}}
+            <div class="col-lg-4 col-md-12">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="text-white fw-bold mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-geo-alt-fill text-danger"></i> Our Location
+                    </h6>
+                    @if ($mapSrc)
+                        <a href="{{ $mapSrc }}" target="_blank" rel="noopener" class="small text-primary text-decoration-none d-inline-flex align-items-center gap-1">
+                            Full Map <i class="bi bi-box-arrow-up-right small"></i>
+                        </a>
+                    @endif
+                </div>
+                <div class="rounded-4 overflow-hidden shadow-sm border border-secondary border-opacity-25" style="height: 180px; width: 100%; background: #0f172a;">
+                    <iframe src="{{ $mapSrc ?: 'https://maps.google.com/maps?q=Dhaka&t=&z=13&ie=UTF8&iwloc=&output=embed' }}"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
         </div>
-        <hr class="border-secondary my-4">
-        <p class="small mb-0">&copy; {{ date('Y') }} {{ $footerSetting?->site_name ?? 'SolarTech Services' }}. All
-            rights reserved.</p>
+
+        <hr class="border-secondary border-opacity-25 my-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <p class="small text-secondary mb-0">
+                &copy; {{ date('Y') }} <strong class="text-light">{{ $footerSetting?->site_name ?? 'SolarTech Services' }}</strong>. All rights reserved.
+            </p>
+            <div class="small text-secondary">
+                Empowering sustainable &amp; intelligent clean energy solutions.
+            </div>
+        </div>
     </div>
 </footer>
+
+<style>
+    .footer-nav-link {
+        color: var(--footer-text, #cbd5e1);
+        font-size: 0.9rem;
+        transition: all 0.2s ease-in-out;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .footer-nav-link:hover {
+        color: var(--accent-color, #f39c12);
+        transform: translateX(4px);
+    }
+    .footer-social-btn {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: #e2e8f0;
+        transition: all 0.25s ease-in-out;
+        text-decoration: none;
+        font-size: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .footer-social-btn:hover {
+        transform: translateY(-3px);
+        color: #ffffff;
+    }
+    .footer-social-btn.facebook:hover {
+        background: #1877f2;
+        border-color: #1877f2;
+        box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
+    }
+    .footer-social-btn.twitter:hover {
+        background: #000000;
+        border-color: #333333;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    .footer-social-btn.instagram:hover {
+        background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(214, 36, 159, 0.4);
+    }
+    .footer-social-btn.linkedin:hover {
+        background: #0a66c2;
+        border-color: #0a66c2;
+        box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
+    }
+    .footer-social-btn.youtube:hover {
+        background: #ff0000;
+        border-color: #ff0000;
+        box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+    }
+    .hover-white:hover {
+        color: #ffffff !important;
+    }
+</style>

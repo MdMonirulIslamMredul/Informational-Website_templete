@@ -224,12 +224,31 @@
         }
 
         @media (max-width: 991.98px) {
-            .navbar.navbar-home-overlay .navbar-collapse.show {
-                background: rgba(2, 6, 23, 0.78);
-                backdrop-filter: blur(14px);
+            .navbar .navbar-collapse {
+                background: var(--surface-color);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid var(--border-color);
                 border-radius: 1rem;
                 margin-top: 0.75rem;
-                padding: 1rem 1.1rem;
+                padding: 1.1rem 1.25rem;
+                box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .navbar.navbar-home-overlay:not(.navbar-scrolled) .navbar-collapse {
+                background: rgba(15, 23, 42, 0.94);
+                border-color: rgba(255, 255, 255, 0.12);
+                box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+            }
+
+            .navbar.navbar-home-overlay:not(.navbar-scrolled) .navbar-collapse .nav-link {
+                color: #e2e8f0 !important;
+            }
+
+            .navbar.navbar-home-overlay:not(.navbar-scrolled) .navbar-collapse .nav-link:hover,
+            .navbar.navbar-home-overlay:not(.navbar-scrolled) .navbar-collapse .nav-link.active {
+                color: var(--primary-color) !important;
             }
         }
 
@@ -423,6 +442,15 @@
             transform: translateY(-1px);
         }
 
+        .card {
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08) !important;
+        }
+
         footer {
             background: var(--footer-bg);
             color: var(--footer-text);
@@ -488,6 +516,7 @@
             background: rgba(15, 23, 42, 0.95);
         }
 
+        /* WhatsApp Floating Button */
         .whatsapp-float {
             position: fixed;
             right: 1.5rem;
@@ -496,56 +525,100 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            min-width: 3.9rem;
-            height: 3.9rem;
-            padding: 0.9rem 1rem;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            color: #ffffff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #25D366;
+            color: #ffffff !important;
             text-decoration: none;
-            box-shadow: 0 18px 45px rgba(37, 211, 102, 0.18);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4), 0 4px 10px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: whatsapp-pulse 2.8s infinite;
         }
 
         .whatsapp-float:hover,
         .whatsapp-float:focus-visible {
-            transform: translateY(-3px);
-            box-shadow: 0 22px 48px rgba(18, 140, 126, 0.22);
-            opacity: 0.98;
+            transform: scale(1.1) translateY(-2px);
+            background-color: #20ba5a;
+            color: #ffffff !important;
+            box-shadow: 0 14px 30px rgba(37, 211, 102, 0.55), 0 6px 14px rgba(0, 0, 0, 0.18);
+            animation: none;
         }
 
-        .whatsapp-float .whatsapp-icon {
-            font-size: 1.35rem;
-            line-height: 1;
+        .whatsapp-float .whatsapp-icon-svg {
+            width: 34px;
+            height: 34px;
+            fill: #ffffff;
+            transition: transform 0.25s ease;
         }
 
-        .whatsapp-float .whatsapp-label {
-            display: none;
+        .whatsapp-float:hover .whatsapp-icon-svg {
+            transform: scale(1.08);
         }
 
-        @media (min-width: 576px) {
-            .whatsapp-float {
-                min-width: auto;
-                padding: 0.85rem 1rem;
+        /* Tooltip that slides out smoothly on hover */
+        .whatsapp-float .whatsapp-tooltip {
+            position: absolute;
+            right: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%) translateX(8px);
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 600;
+            white-space: nowrap;
+            padding: 6px 14px;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.25s ease;
+        }
+
+        .whatsapp-float .whatsapp-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -6px;
+            transform: translateY(-50%);
+            border-width: 6px 0 6px 6px;
+            border-style: solid;
+            border-color: transparent transparent transparent #0f172a;
+        }
+
+        .whatsapp-float:hover .whatsapp-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        @keyframes whatsapp-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.65), 0 10px 25px rgba(37, 211, 102, 0.4);
             }
-
-            .whatsapp-float .whatsapp-label {
-                display: inline-block;
-                font-size: 0.95rem;
-                letter-spacing: 0.01em;
+            70% {
+                box-shadow: 0 0 0 14px rgba(37, 211, 102, 0), 0 10px 25px rgba(37, 211, 102, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 10px 25px rgba(37, 211, 102, 0.4);
             }
         }
 
         @media (max-width: 575px) {
             .whatsapp-float {
-                width: 3.6rem;
-                height: 3.6rem;
-                padding: 0.8rem;
+                right: 1.1rem;
+                bottom: 1.1rem;
+                width: 54px;
+                height: 54px;
             }
 
-            .whatsapp-float .whatsapp-label {
+            .whatsapp-float .whatsapp-icon-svg {
+                width: 30px;
+                height: 30px;
+            }
+
+            .whatsapp-float .whatsapp-tooltip {
                 display: none;
             }
         }
@@ -638,17 +711,18 @@
 
     @include('frontend.partials.footer')
 
-    @if ($settings?->contact_phone)
-        @php
-            $whatsappNumber = preg_replace('/\D+/', '', $settings->contact_phone);
-        @endphp
-        @if ($whatsappNumber)
-            <a href="https://wa.me/{{ $whatsappNumber }}" class="whatsapp-float" target="_blank"
-                rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-                <i class="bi bi-whatsapp whatsapp-icon" aria-hidden="true"></i>
-                <span class="whatsapp-label">WhatsApp</span>
-            </a>
-        @endif
+    @php
+        $rawPhone = $settings?->contact_phone ?? '+880 1700-000000';
+        $whatsappNumber = preg_replace('/\D+/', '', $rawPhone);
+    @endphp
+    @if ($whatsappNumber)
+        <a href="https://wa.me/{{ $whatsappNumber }}" class="whatsapp-float" target="_blank"
+            rel="noopener noreferrer" aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
+            <span class="whatsapp-tooltip">Chat with us</span>
+            <svg class="whatsapp-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            </svg>
+        </a>
     @endif
 
     <button type="button" class="theme-fab" id="themeToggleButton" aria-label="Toggle dark mode">
@@ -741,7 +815,19 @@
 
         AOS.init({
             once: true,
-            duration: 650
+            duration: 750,
+            easing: 'ease-out-cubic'
+        });
+
+        // Auto-close mobile navbar on link click or outside click
+        document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)').forEach(link => {
+            link.addEventListener('click', () => {
+                const collapseEl = document.getElementById('mainNav');
+                if (collapseEl && collapseEl.classList.contains('show')) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(collapseEl);
+                    if (bsCollapse) bsCollapse.hide();
+                }
+            });
         });
         // position floating flash below the navbar exactly
         (function() {
