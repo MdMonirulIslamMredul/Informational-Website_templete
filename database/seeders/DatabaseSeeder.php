@@ -13,6 +13,8 @@ use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,11 +25,68 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(['email' => 'admin@admin.com'], [
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $adminUser = User::updateOrCreate(['email' => 'admin@admin.com'], [
             'name' => 'Admin User',
             'password' => '12345678',
             'is_admin' => true,
         ]);
+
+        $permissions = [
+            'access admin panel',
+            'view',
+            'create',
+            'edit',
+            'delete',
+            'manage users',
+            'manage roles',
+            'manage permissions',
+            'manage products',
+            'manage services',
+            'manage team members',
+            'manage blogs',
+            'manage galleries',
+            'manage contacts',
+            'Web_Settings',
+            'manage branches',
+        ];
+
+        foreach ($permissions as $permissionName) {
+            Permission::firstOrCreate(['name' => $permissionName]);
+        }
+
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        $branchAdminRole = Role::firstOrCreate(['name' => 'Branch Admin']);
+        $productAdminRole = Role::firstOrCreate(['name' => 'Product Admin']);
+        $editorRole = Role::firstOrCreate(['name' => 'Editor']);
+        $userRole = Role::firstOrCreate(['name' => 'User']);
+
+        $superAdminRole->syncPermissions($permissions);
+        $adminRole->syncPermissions([
+            'access admin panel',
+            'view',
+            'create',
+            'edit',
+            'delete',
+            'manage users',
+            'manage roles',
+            'manage permissions',
+            'manage products',
+            'manage services',
+            'manage team members',
+            'manage blogs',
+            'manage galleries',
+            'manage contacts',
+            'Web_Settings',
+        ]);
+        $branchAdminRole->syncPermissions(['access admin panel', 'view', 'create', 'edit', 'manage branches']);
+        $productAdminRole->syncPermissions(['access admin panel', 'view', 'create', 'edit', 'manage products']);
+        $editorRole->syncPermissions(['access admin panel', 'view', 'create', 'edit']);
+        $userRole->syncPermissions(['view']);
+
+        $adminUser->assignRole($superAdminRole);
 
         Setting::updateOrCreate(['id' => 1], [
             'site_name' => 'SolarTech Services',
