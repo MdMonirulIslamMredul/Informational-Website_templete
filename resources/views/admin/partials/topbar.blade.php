@@ -1,8 +1,14 @@
-<div class="bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
-    <div>
-        <strong>Welcome, {{ auth()->user()->name }}</strong>
+<div class="topbar bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar" aria-label="Toggle navigation">
+            <i class="bi bi-list fs-5 lh-1"></i>
+        </button>
+        <span class="fw-bold d-none d-sm-inline">Welcome, {{ auth()->user()->name }}</span>
+        <span class="fw-bold d-inline d-sm-none text-truncate" style="max-width: 130px;" title="{{ auth()->user()->name }}">
+            {{ auth()->user()->name }}
+        </span>
     </div>
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-2 gap-sm-3">
         <a href="{{ Route::has('home') ? route('home') : url('/') }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="View Frontend Website">
             <i class="bi bi-globe"></i>
         </a>
@@ -18,7 +24,7 @@
         <div class="dropdown">
             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="adminUserMenu"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-person-circle"></i> {{ auth()->user()->name }}
+                <i class="bi bi-person-circle"></i> <span class="d-none d-sm-inline">{{ auth()->user()->name }}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminUserMenu">
                 <li><a class="dropdown-item" href="{{ Route::has('home') ? route('home') : url('/') }}" target="_blank"><i class="bi bi-box-arrow-up-right me-2"></i>Visit Website</a></li>
