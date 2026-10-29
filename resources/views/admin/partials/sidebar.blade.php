@@ -1,11 +1,14 @@
-<div class="col-lg-2 sidebar p-3 d-flex flex-column" style="min-height: 100vh;">
+<div class="sidebar col-lg-2 offcanvas-lg offcanvas-start p-3 d-flex flex-column text-white" tabindex="-1" id="adminSidebar" aria-labelledby="adminSidebarLabel">
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
-        <h5 class="text-white mb-0">Admin Panel</h5>
-        <a href="{{ Route::has('home') ? route('home') : url('/') }}" target="_blank"
-            class="btn btn-sm btn-outline-light border-secondary text-white py-1 px-2"
-            title="View Frontend Website">
-            <i class="bi bi-globe"></i>
-        </a>
+        <h5 class="text-white mb-0" id="adminSidebarLabel">Admin Panel</h5>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ Route::has('home') ? route('home') : url('/') }}" target="_blank"
+                class="btn btn-sm btn-outline-light border-secondary text-white py-1 px-2"
+                title="View Frontend Website">
+                <i class="bi bi-globe"></i>
+            </a>
+            <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#adminSidebar" aria-label="Close"></button>
+        </div>
     </div>
 
     {{-- Dashboard --}}
@@ -42,6 +45,7 @@
                 'admin.partners.*',
                 'admin.blogs.*',
                 'admin.galleries.*',
+                'admin.system-tools.*',
             ];
             $isWebSettingsActive = request()->routeIs($webSettingsRoutes);
         @endphp
@@ -74,6 +78,10 @@
                 class="{{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}">Blogs</a>
             <a href="{{ route('admin.galleries.index') }}"
                 class="{{ request()->routeIs('admin.galleries.*') ? 'active' : '' }}">Gallery</a>
+            <a href="{{ route('admin.system-tools.index') }}"
+                class="{{ request()->routeIs('admin.system-tools.*') ? 'active' : '' }}">
+                <i class="bi bi-hdd-network me-1"></i> System &amp; Cache
+            </a>
         </div>
     @endcan
 
