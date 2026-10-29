@@ -17,8 +17,39 @@
         }
 
         .sidebar {
-            min-height: 100vh;
-            background: #0f172a;
+            background-color: #0f172a !important;
+            z-index: 1045;
+        }
+
+        @media (min-width: 992px) {
+            .sidebar {
+                min-height: 100vh;
+                height: auto;
+                position: static;
+                flex: 0 0 16.66666667% !important;
+                max-width: 16.66666667% !important;
+                width: 16.66666667% !important;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar.offcanvas-lg {
+                width: 280px !important;
+                max-width: 85vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                overflow-y: auto !important;
+                box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
         }
 
         .sidebar a {
@@ -73,9 +104,9 @@
     <div class="container-fluid">
         <div class="row">
             @include('admin.partials.sidebar')
-            <div class="col-lg-10 content p-0">
+            <div class="col-12 col-lg-10 content p-0">
                 @include('admin.partials.topbar')
-                <div class="p-4">
+                <div class="p-3 p-md-4">
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
